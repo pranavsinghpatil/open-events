@@ -79,11 +79,11 @@ export default function FluidNavbar({
   }, []);
 
   const navItems = [
-    { key: 'home', label: 'Overview' },
-    { key: 'discover', label: 'Discover' },
-    { key: 'calendar', label: 'Timeline' },
-    { key: 'venues', label: 'Venues' },
-    { key: 'my-week', label: 'My Constellation', count: savedCount },
+    { key: 'home', label: '00 // Overview' },
+    { key: 'discover', label: '01 // Signals' },
+    { key: 'calendar', label: '02 // Timeline' },
+    { key: 'venues', label: '03 // Venues' },
+    { key: 'my-week', label: '04 // Constellation', count: savedCount }
   ];
 
   const handleNav = (key) => { onNavigate(key); setMobileMenuOpen(false); };

@@ -37,6 +37,7 @@ Thumbs.db
 .idea/
 .pranav/
 .harry/
+.agents/
 
 *.suo
 *.ntvs*

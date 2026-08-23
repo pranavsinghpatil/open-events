@@ -202,10 +202,22 @@ def extract_venue_and_area(venue_raw: str, locality_raw: str) -> tuple:
             
     return venue_clean, extracted_area
 
-def normalize_events(raw_items: list, only_upcoming: bool = True) -> list:
+def is_this_week_or_future(date_str: str) -> bool:
+    """Checks if a YYYY-MM-DD date string falls in the current week or the future."""
+    if not date_str:
+        return True
+    try:
+        today = datetime.now().date()
+        from datetime import timedelta
+        start_of_week = (today - timedelta(days=today.weekday())).strftime("%Y-%m-%d")
+        return date_str >= start_of_week
+    except Exception:
+        return True
+
+def normalize_events(raw_items: list) -> list:
     """
     Normalizes a list of raw event items into the canonical internal structure.
-    Filters out past events when `only_upcoming=True`.
+    Filters out past events (only keeps current week or future events).
     """
     if not raw_items:
         return []
@@ -224,10 +236,10 @@ def normalize_events(raw_items: list, only_upcoming: bool = True) -> list:
         date_raw = item.get("raw_date", "")
         date_clean = parse_date(date_raw)
         
-        # Upcoming Date Filter: Exclude events with date earlier than today
-        if only_upcoming and date_clean < today_str:
+        # Filter out past events
+        if not is_this_week_or_future(date_clean):
             continue
-            
+        
         time_raw = item.get("raw_time", "")
         time_clean = parse_time(time_raw)
         

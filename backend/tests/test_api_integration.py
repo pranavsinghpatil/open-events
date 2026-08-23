@@ -19,7 +19,8 @@ class TestAPIIntegration(unittest.TestCase):
         init_db()
 
     def setUp(self):
-        self.loop = asyncio.get_event_loop()
+        self.loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(self.loop)
 
     def tearDown(self):
         conn = get_db_connection()
@@ -44,9 +45,9 @@ class TestAPIIntegration(unittest.TestCase):
         self.assertIn("Theatre & Arts", res["categories"])
 
     def test_trigger_and_events_ingestion_flow(self):
-        """Tests trigger scrape endpoint POST /dca/trigger and listing ingested events via GET /events."""
+        """Tests trigger scrape endpoint POST /scrape and listing ingested events via GET /events."""
         # 1. Trigger FullHyd Scrape
-        trig_res = trigger_scrape(target="FullHyd", inject_errors=False)
+        trig_res = self.loop.run_until_complete(trigger_scrape(target="FullHyd", background=True, inject_errors=False))
         self.assertEqual(trig_res["status"], "triggered")
         self.assertIn("job_id", trig_res)
         
@@ -67,7 +68,7 @@ class TestAPIIntegration(unittest.TestCase):
 
     def test_events_filtering_by_category_and_area(self):
         """Tests category and area filtering parameters on GET /events."""
-        trig_res = trigger_scrape(target="FullHyd")
+        trig_res = self.loop.run_until_complete(trigger_scrape(target="FullHyd", background=True))
         job_id = trig_res["job_id"]
         self.loop.run_until_complete(run_pipeline(job_id, "FullHyd"))
         
@@ -81,7 +82,7 @@ class TestAPIIntegration(unittest.TestCase):
 
     def test_weekly_digest_endpoint(self):
         """Tests GET /events/digest response structure."""
-        trig_res = trigger_scrape(target="FullHyd")
+        trig_res = self.loop.run_until_complete(trigger_scrape(target="FullHyd", background=True))
         job_id = trig_res["job_id"]
         self.loop.run_until_complete(run_pipeline(job_id, "FullHyd"))
         

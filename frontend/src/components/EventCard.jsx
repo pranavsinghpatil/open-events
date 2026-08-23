@@ -11,11 +11,12 @@ export default function EventCard({
   if (!event) return null;
 
   const {
-    title = 'Untitled Event',
+    event_id = '0000',
+    title = 'Untitled Signal',
     category = 'Music',
     date,
     time,
-    venue = 'Hyderabad Venue',
+    venue = 'Independent Venue',
     area = 'Hyderabad',
     price,
     description,
@@ -28,9 +29,8 @@ export default function EventCard({
   const isFree = displayPrice.toLowerCase().includes('free');
   const primarySource = sources[0] || {};
   const cardImage = image || meta.fallbackImage;
-
-  // Clean locality extraction
   const cleanArea = area ? area.split(',')[0].trim() : 'Hyderabad';
+  const cleanId = String(event_id).replace(/[^0-9]/g, '').slice(-4).padStart(4, '0') || '0842';
 
   const handleBookmarkClick = (e) => {
     e.stopPropagation();
@@ -39,7 +39,7 @@ export default function EventCard({
 
   return (
     <article
-      className="sv-card group"
+      className="sv-hud-card group"
       onClick={onClick}
       tabIndex={0}
       role="button"
@@ -49,9 +49,15 @@ export default function EventCard({
           onClick?.();
         }
       }}
-      aria-label={`Event: ${title}`}
+      aria-label={`Event Signal: ${title}`}
     >
-      {/* Media Header */}
+      {/* Digitized Top Telemetry Bar */}
+      <div className="sv-hud-top-bar font-mono">
+        <span className="sv-hud-sig-id">SIG_NODE #{cleanId}</span>
+        <span className="sv-hud-status-dot">● ACTIVE</span>
+      </div>
+
+      {/* Media Window with Scanline Effect */}
       <div className="sv-card-media">
         <img
           src={cardImage}
@@ -62,16 +68,17 @@ export default function EventCard({
             e.currentTarget.src = meta.fallbackImage;
           }}
         />
+        <div className="sv-hud-scanlines" />
         <div className="sv-card-media-overlay" />
 
-        {/* Top Badges Bar */}
+        {/* Category & Bookmark Bar */}
         <div className="sv-card-badges-top">
           <span
-            className="sv-category-badge"
+            className="sv-category-badge font-mono"
             style={{
               borderColor: meta.border,
-              backgroundColor: 'rgba(18, 22, 21, 0.82)',
-              color: '#FFFFFF'
+              backgroundColor: 'rgba(8, 12, 10, 0.88)',
+              color: '#F4F3EE'
             }}
           >
             <span className="badge-glyph-wrap" style={{ color: meta.color }}>
@@ -84,19 +91,19 @@ export default function EventCard({
             type="button"
             className={`sv-bookmark-btn ${isSaved ? 'active' : ''}`}
             onClick={handleBookmarkClick}
-            aria-label={isSaved ? 'Remove from saved constellation' : 'Save to constellation'}
-            title={isSaved ? 'Saved in My Week' : 'Save to My Week'}
+            aria-label={isSaved ? 'Saved in constellation' : 'Save to constellation'}
+            title={isSaved ? 'Saved in My Constellation' : 'Save signal'}
           >
             <BookmarkIcon className="w-3.5 h-3.5" filled={isSaved} />
           </button>
         </div>
 
-        {/* Source Verified Badge */}
+        {/* Source Verified Telemetry Tag */}
         {primarySource.site_name && (
-          <div className="sv-card-source-bottom">
+          <div className="sv-card-source-bottom font-mono">
             <span className="sv-source-chip">
               <SourceIcon className="w-3 h-3 text-jade" />
-              <span>{primarySource.site_name}</span>
+              <span>CRAWLED // {primarySource.site_name.toUpperCase()}</span>
             </span>
           </div>
         )}
@@ -104,46 +111,37 @@ export default function EventCard({
 
       {/* Card Content Body */}
       <div className="sv-card-body">
-        <div className="sv-card-meta-row">
-          <div className="sv-card-date">
-            <CalendarIcon className="w-3.5 h-3.5 text-saffron" />
-            <span>{formatDate(date)}{time && time !== 'Evening' ? ` · ${time}` : ''}</span>
+        <div className="sv-hud-meta-grid font-mono">
+          <div className="sv-hud-meta-cell">
+            <span className="sv-hud-meta-label">DATE</span>
+            <span className="sv-hud-meta-val">{formatDate(date)}</span>
+          </div>
+          <div className="sv-hud-meta-cell">
+            <span className="sv-hud-meta-label">LOCALITY</span>
+            <span className="sv-hud-meta-val truncate">{cleanArea}</span>
           </div>
         </div>
 
-        <h3 className="sv-card-title" title={title}>
+        <h3 className="sv-card-title font-serif" title={title}>
           {title}
         </h3>
 
-        {description && (
-          <p className="sv-card-desc">
-            {description}
-          </p>
-        )}
-
-        <div className="sv-card-venue">
-          <LocationIcon className="w-3.5 h-3.5 text-muted" />
-          <span className="truncate">{venue} · <span className="text-secondary">{cleanArea}</span></span>
+        <div className="sv-card-venue font-mono">
+          <LocationIcon className="w-3 h-3 text-saffron" />
+          <span className="truncate">{venue}</span>
         </div>
-
-        {/* Multi-source indicator */}
-        {sources.length > 1 && (
-          <div className="sv-card-multisource">
-            <span>+ verified across {sources.length} crawled feeds</span>
-          </div>
-        )}
       </div>
 
-      {/* Card Footer */}
-      <div className="sv-card-footer">
+      {/* Digitized Footer Specs */}
+      <div className="sv-card-footer font-mono">
         <span className={`sv-price-pill ${isFree ? 'price-free' : 'price-paid'}`}>
           <TicketIcon className="w-3 h-3 opacity-80" />
           <span>{displayPrice}</span>
         </span>
 
-        <span className="sv-card-cta">
-          <span>Inspect</span>
-          <span className="sv-cta-arrow-icon">→</span>
+        <span className="sv-hud-action-btn">
+          <span>ACCESS SIGNAL</span>
+          <span className="sv-hud-arrow">→</span>
         </span>
       </div>
     </article>

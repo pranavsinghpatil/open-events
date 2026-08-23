@@ -6,6 +6,7 @@ import { fetchEvents, fetchFixtureEvents } from './lib/api.ts';
 import FluidNavbar from './components/FluidNavbar.jsx';
 import SearchModal from './components/SearchModal.jsx';
 import TriggerPanel from './components/TriggerPanel.jsx';
+import ScrollUniverseBackground from './components/ScrollUniverseBackground.jsx';
 
 // Pages
 import HomePage from './pages/HomePage.jsx';
@@ -203,6 +204,9 @@ export default function App() {
 
   return (
     <div className="sarvam-root">
+      {/* Dynamic Scroll & Motion Universe Background */}
+      <ScrollUniverseBackground page={page} />
+
       {/* Fluid Sticky Glass Header */}
       <FluidNavbar
         page={page}

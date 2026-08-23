@@ -35,11 +35,11 @@ export default function CityWebGLScene() {
     const starColors = new Float32Array(starCount * 3);
 
     const colorPalette = [
-      new THREE.Color('#EB5E28'), // Saffron / Orange
+      new THREE.Color('#FF6B35'), // Saffron
       new THREE.Color('#10B981'), // Jade Emerald
-      new THREE.Color('#8B5CF6'), // Violet
-      new THREE.Color('#3B82F6'), // Indigo
-      new THREE.Color('#F59E0B')  // Amber Gold
+      new THREE.Color('#FFAA64'), // Amber Highlight
+      new THREE.Color('#34D399'), // Mint Jade
+      new THREE.Color('#134E42')  // Deep Emerald
     ];
 
     for (let i = 0; i < starCount; i++) {
@@ -72,9 +72,9 @@ export default function CityWebGLScene() {
 
     // Orbital Rings
     const ringConfigs = [
-      { radius: 2.4, yScale: 0.75, rotZ: -0.28, rotX: 0.35, color: '#EB5E28', opacity: 0.45 },
+      { radius: 2.4, yScale: 0.75, rotZ: -0.28, rotX: 0.35, color: '#FF6B35', opacity: 0.45 },
       { radius: 1.9, yScale: 0.62, rotZ: 0.42, rotX: -0.25, color: '#10B981', opacity: 0.4 },
-      { radius: 1.45, yScale: 0.48, rotZ: -0.75, rotX: 0.15, color: '#8B5CF6', opacity: 0.35 }
+      { radius: 1.45, yScale: 0.48, rotZ: -0.75, rotX: 0.15, color: '#FFAA64', opacity: 0.35 }
     ];
 
     ringConfigs.forEach(({ radius, yScale, rotZ, rotX, color, opacity }) => {
@@ -98,13 +98,13 @@ export default function CityWebGLScene() {
 
     // Central Core Pulse (Hyderabad Node)
     const coreGeo = new THREE.SphereGeometry(0.24, 32, 32);
-    const coreMat = new THREE.MeshBasicMaterial({ color: 0xEB5E28 });
+    const coreMat = new THREE.MeshBasicMaterial({ color: 0xFF6B35 });
     const core = new THREE.Mesh(coreGeo, coreMat);
     orbitGroup.add(core);
 
     const haloGeo = new THREE.SphereGeometry(0.42, 32, 32);
     const haloMat = new THREE.MeshBasicMaterial({
-      color: 0xEB5E28,
+      color: 0xFF6B35,
       transparent: true,
       opacity: 0.15
     });

@@ -10,10 +10,13 @@ from app.database import (
     init_db,
     get_job,
     get_all_events,
-    get_event_by_id
+    get_event_by_id,
+    save_merged_events
 )
 from app.orchestrator import run_pipeline, start_periodic_scheduler
 from app.processor.normalizer import UNIFIED_TAXONOMY, normalize_events, map_category
+from app.processor.deduplicator import deduplicate_events
+from app.scraper.collector import load_real_scraped_file
 
 # Resolve fixture path relative to repo root (backend/app/ -> backend/ -> scrape_/)
 _REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
@@ -88,10 +91,10 @@ def health() -> dict:
 def list_events(
     category: Optional[str] = None,
     area: Optional[str] = None,
-    limit: int = 50
+    limit: Optional[int] = 500
 ):
     """
-    Returns normalized and de-duplicated city leisure events.
+    Returns normalized and de-duplicated city leisure events directly from PostgreSQL database.
     Allows filtering by `category` and `area`.
     """
     events = get_all_events()
@@ -101,7 +104,8 @@ def list_events(
     if area:
         events = [e for e in events if area.lower() in e.get("area", "").lower()]
         
-    events = events[:limit]
+    if limit is not None:
+        events = events[:limit]
     
     return {
         "total": len(events),
@@ -222,23 +226,46 @@ def get_event(event_id: str):
         raise HTTPException(status_code=404, detail="Event not found")
     return event
 
-@app.post("/dca/trigger", response_model=TriggerResponse, tags=["Scraper Control"])
-def trigger_scrape(target: str = "FullHyd", background_tasks: BackgroundTasks = None, inject_errors: bool = False):
+@app.post("/scrape", tags=["Scraper Control"])
+async def trigger_scrape(
+    target: str = "FullHyd",
+    background: bool = False,
+    inject_errors: bool = False,
+    background_tasks: BackgroundTasks = None
+):
     """
-    Triggers an event scraper run in the background.
-    Targets: FullHyd, HydHub, AroundU
+    Unified endpoint to trigger event scraping:
+    1. Triggers Bright Data Scraper Studio collector with API key & collector ID.
+    2. Receives collection_id and polls status until dataset is ready (or runs in background if background=True).
+    3. Normalizes & deduplicates structured JSON items.
+    4. Stores clean merged events in PostgreSQL.
     """
     from app.database import create_job
-    job_id = f"job_{uuid.uuid4().hex[:8]}"
+    job_id = f"scrape_{uuid.uuid4().hex[:8]}"
     create_job(job_id, target)
     
-    if background_tasks:
-        background_tasks.add_task(run_pipeline, job_id, target, inject_errors)
+    if background:
+        if background_tasks:
+            background_tasks.add_task(run_pipeline, job_id, target, inject_errors)
+        return {
+            "status": "triggered",
+            "job_id": job_id,
+            "target": target,
+            "mode": "background"
+        }
         
+    pipeline_result = await run_pipeline(job_id, target, inject_errors=inject_errors)
+    all_events = get_all_events()
+    
     return {
-        "status": "triggered",
+        "status": "success",
         "job_id": job_id,
-        "target": target
+        "target": target,
+        "mode": "synchronous",
+        "database": "PostgreSQL" if os.getenv("DATABASE_URL", "").startswith("postgresql") else "SQLite",
+        "pipeline_result": pipeline_result,
+        "total_events": len(all_events),
+        "events": all_events
     }
 
 @app.get("/dca/jobs/{job_id}", tags=["Scraper Control"])
