@@ -1,28 +1,17 @@
 # OpenEvents
 
-> City leisure events aggregation and deduplication pipeline powered by Bright Data.
+> City leisure events aggregation and deduplication pipeline.
 
 <div align="center">
 
-[![Hackathon](https://img.shields.io/badge/WeMakeDevs-Into_the_Scrape--Verse-0052FF?style=flat-square)](https://www.wemakedevs.org/hackathons/scrape-verse)
-[![Powered by Bright Data](https://img.shields.io/badge/Powered_by-Bright_Data-FF4D00?style=flat-square)](https://brightdata.com)
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688?style=flat-square)](https://fastapi.tiangolo.com)
 [![React](https://img.shields.io/badge/Frontend-React_18_+_Vite-61DAFB?style=flat-square)](https://react.dev)
 [![Three.js](https://img.shields.io/badge/WebGL-Three.js-black?style=flat-square)](https://threejs.org)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 
-**[Live Demo](http://localhost:5173)** • **[Demo Video](#demo-video)** • **[Hackathon Overview](https://www.wemakedevs.org/hackathons/scrape-verse)** • **[Bright Data Integration](docs/brightdata.md)** • **[Architecture Details](docs/architecture.md)** • **[API Contract](docs/api-contract.md)**
+**[Live Demo](http://localhost:5173)** • **[Architecture Details](docs/architecture.md)** • **[API Contract](docs/api-contract.md)**
 
 </div>
-
----
-
-## Demo Video
-
-[![OpenEvents Demo Video](https://img.youtube.com/vi/YOUR_VIDEO_ID/maxresdefault.jpg)](https://www.youtube.com/watch?v=YOUR_VIDEO_ID)
-
-> Full video walkthrough demonstrating Bright Data custom scrapers, self-healing failovers, fuzzy deduplication, and the interactive dashboard: **[Watch on YouTube](https://www.youtube.com/watch?v=YOUR_VIDEO_ID)**.  
-> Step-by-step presentation script is documented in [`docs/demo.md`](docs/demo.md).
 
 ---
 
@@ -65,21 +54,7 @@ FastAPI Service (/api/events, /api/venues, /api/scrapers/trigger)
 React Frontend (Hero-13 HUD, WebGL Scene, Bento Grid, Weekly Timeline)
 ```
 
----
 
-## Bright Data Integration
-
-In accordance with Hackathon Rules 3 and 5, all scrapers are custom-built per target source in **Bright Data Scraper Studio** rather than using generic marketplace templates.
-
-### Registered Collectors (`configs/scraper_registry.json`)
-
-| Collector Name | Collector ID | Target URL | Target Categories |
-|---|---|---|---|
-| `fullhyd_events_collector` | `c_fullhyd_events` | `events.fullhyderabad.com` | Music, Theatre, Dance, Workshops, Sports |
-| `hydhub_events_collector` | `c_hydhub_events` | `hydhub.in` | Concerts, Meetups, Talks, Nightlife |
-| `aroundu_events_collector` | `c_aroundu_events` | `aroundu.in/city/hyderabad` | Community Meetups, Food, Arts |
-
----
 
 ## Self-Healing & Pipeline Resilience
 
@@ -190,13 +165,13 @@ PYTHONPATH=backend python -m unittest backend/tests/test_pipeline.py
 
 ---
 
-## Hackathon Compliance & AI Disclosure
+## Data Collection (Bright Data)
 
-- **Rule 3 & 5 (Custom Scrapers)**: Custom collectors written in Bright Data Scraper Studio for each target domain.
-- **Rule 6 (Public Pages Only)**: Targets publicly viewable event listing pages. No login, session tokens, or private user data.
-- **Rule 7 (No Government Sites)**: Sources are privately operated leisure event platforms.
-- **Rule 10 (Deliverables)**: Source code, sample data payload, architecture documentation, and setup instructions provided.
-- **Rule 11 (AI Disclosure)**: AI tooling (Google DeepMind Antigravity / Gemini, OpenAI Codex) was used during development for component scaffolding, algorithmic reference, and test generation. All system design, pipeline logic, and scraper workflows were built during the hackathon period.
+OpenEvents utilizes **Bright Data Scraper Studio** to reliably aggregate event data from various public sources. Custom collectors are deployed for each target domain to ensure robust, scalable data extraction. This raw data is then fed into our pipeline for validation, normalization, and deduplication.
+
+---
+
+
 
 ---
 
