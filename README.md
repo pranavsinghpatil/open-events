@@ -18,7 +18,7 @@
 
 ---
 
-## Demo Video
+## Table of Contents
 
 [![OpenEvents Demo Video](https://img.youtube.com/vi/fBn6OUXb1rI/maxresdefault.jpg)](https://youtu.be/fBn6OUXb1rI)
 
@@ -47,23 +47,23 @@ The live deployment is publicly accessible at [open-events.vercel.app](https://o
 
 ```text
 Public Web Sources (FullHyd, HydHub, AroundU)
-                    |
-                    v
+                    │
+                    ▼
 Bright Data Scraper Studio (Cloud Collectors & Proxies)
-                    |
-                    v
+                    │
+                    ▼
 Ingestion & Health Validator (Schema drift detection & fallback)
-                    |
-                    v
+                    │
+                    ▼
 Normalization Engine (ISO-8601 temporal parser & taxonomy mapping)
-                    |
-                    v
+                    │
+                    ▼
 Fuzzy Deduplication Engine (Jaro-Winkler & Levenshtein matching)
-                    |
-                    v
+                    │
+                    ▼
 SQLite Database (Time-series canonical event store)
-                    |
-                    v
+                    │
+                    ▼
 FastAPI Service (/api/events, /api/venues, /api/scrapers/trigger)
                     |
                     v
@@ -84,9 +84,11 @@ Web scrapers break when target websites modify their DOM structure or class name
 
 Cross-posted events frequently contain minor spelling differences, truncated venue names, or varying date formats. The deduplication module calculates composite similarity using weighted string distance algorithms:
 
-- **Title Similarity (50%)**: Normalized Levenshtein distance on lowercase, punctuation-stripped titles.
-- **Date Matching (30%)**: Exact match or adjacent time-slot window.
-- **Venue & Locality Proximity (20%)**: Jaro-Winkler string similarity over venue and neighborhood fields.
+| Signal | Weight | Method |
+|---|---|---|
+| **Title Similarity** | 50% | Normalized Levenshtein distance on lowercase, punctuation-stripped titles |
+| **Date Matching** | 30% | Exact match or adjacent time-slot window |
+| **Venue & Locality Proximity** | 20% | Jaro-Winkler string similarity over venue and neighborhood fields |
 
 Pairs with a composite score of **0.85 or higher** are merged into a canonical record. All original source URLs are preserved in a `sources` provenance array on the merged record.
 
@@ -175,6 +177,7 @@ open-events/
 ```bash
 git clone https://github.com/pranavsinghpatil/open-events.git
 cd open-events
+```
 
 # Copy the environment template
 cp .env.example .env
@@ -218,7 +221,7 @@ PYTHONPATH=backend python -m unittest discover -s backend/tests
 
 ---
 
-## Hackathon Compliance & AI Disclosure
+## Data Collection (Bright Data)
 
 | Rule | Status | Notes |
 |------|--------|-------|
