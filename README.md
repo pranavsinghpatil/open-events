@@ -18,7 +18,7 @@
 
 ---
 
-## Demo Video
+## Table of Contents
 
 [![OpenEvents Demo Video](https://img.youtube.com/vi/fBn6OUXb1rI/maxresdefault.jpg)](https://youtu.be/fBn6OUXb1rI)
 
@@ -29,13 +29,17 @@
 
 ## Overview
 
-OpenEvents aggregates urban leisure events (live music, theatre, workshops, tech meetups, sports, art exhibits, food festivals) across Hyderabad from multiple independent public event directories:
+**OpenEvents** aggregates urban leisure events — live music, theatre, workshops, tech meetups, sports, and art exhibits — across Hyderabad from multiple independent public event directories:
 
-- **FullHyd Events** (`events.fullhyderabad.com`)
-- **HydHub** (`hydhub.in`)
-- **AroundU** (`aroundu.in/city/hyderabad`)
+| Source | Domain |
+|---|---|
+| **FullHyd Events** | `events.fullhyderabad.com` |
+| **HydHub** | `hydhub.in` |
+| **AroundU** | `aroundu.in/city/hyderabad` |
 
-The system uses custom scrapers built in **Bright Data Scraper Studio**, validates raw payloads against a unified schema, applies fuzzy string matching to eliminate cross-posted duplicates, and serves the clean data through a FastAPI backend and a React dashboard with 3D spatial orbit visualization.
+The system uses custom scrapers built in **Bright Data Scraper Studio**, validates raw payloads against a unified schema, applies fuzzy string matching to eliminate cross-posted duplicates, and serves the clean data through a FastAPI backend and a React dashboard with a 3D spatial orbit visualization.
+
+🔗 **Try it live:** [open-events.vercel.app](https://open-events.vercel.app/)
 
 ---
 
@@ -43,27 +47,27 @@ The system uses custom scrapers built in **Bright Data Scraper Studio**, validat
 
 ```text
 Public Web Sources (FullHyd, HydHub, AroundU)
-                    |
-                    v
+                    │
+                    ▼
 Bright Data Scraper Studio (Cloud Collectors & Proxies)
-                    |
-                    v
+                    │
+                    ▼
 Ingestion & Health Validator (Schema drift detection & fallback)
-                    |
-                    v
+                    │
+                    ▼
 Normalization Engine (ISO-8601 temporal parser & taxonomy mapping)
-                    |
-                    v
+                    │
+                    ▼
 Fuzzy Deduplication Engine (Jaro-Winkler & Levenshtein matching)
-                    |
-                    v
+                    │
+                    ▼
 SQLite Database (Time-series canonical event store)
-                    |
-                    v
+                    │
+                    ▼
 FastAPI Service (/api/events, /api/venues, /api/scrapers/trigger)
-                    |
-                    v
-React Frontend (Hero-13 HUD, WebGL Scene, Bento Grid, Weekly Timeline)
+                    │
+                    ▼
+React Frontend (Hero HUD, WebGL Scene, Bento Grid, Weekly Timeline)
 ```
 
 ---
@@ -74,22 +78,24 @@ In accordance with Hackathon Rules 3 and 5, all scrapers are custom-built per ta
 
 ## Self-Healing & Pipeline Resilience
 
-Web scrapers often break when target websites modify their DOM structure or class names. OpenEvents handles this with a validation and fallback flow:
+Web scrapers often break when target websites modify their DOM structure or class names. OpenEvents handles this with a validation-and-fallback flow:
 
-1. **Schema Validation**: Each incoming record is checked for mandatory fields (`title`, `date`, `venue`).
-2. **Drift Detection**: If field extraction drop-off exceeds threshold limits, the ingestion layer flags the run as degraded.
-3. **Fallback Resolution**: Backup parsing rules and secondary selectors are triggered automatically to recover missing attributes before writing to the database.
-4. **Telemetry Logging**: Execution stats and failure reasons are logged and accessible via the Scraper Control Console.
+1. **Schema Validation** — Each incoming record is checked for mandatory fields (`title`, `date`, `venue`).
+2. **Drift Detection** — If field-extraction drop-off exceeds a threshold, the ingestion layer flags the run as degraded.
+3. **Fallback Resolution** — Backup parsing rules and secondary selectors are triggered automatically to recover missing attributes before writing to the database.
+4. **Telemetry Logging** — Execution stats and failure reasons are logged and accessible via the Scraper Control Console.
 
 ---
 
 ## Fuzzy Deduplication & Normalization
 
-Cross-posted events frequently contain minor spelling differences, truncated venue names, or varying date formats. The deduplication module calculates composite similarity using weighted distance algorithms:
+Cross-posted events frequently contain minor spelling differences, truncated venue names, or varying date formats. The deduplication module calculates a composite similarity score using weighted distance algorithms:
 
-- **Title Similarity (50%)**: Normalized Levenshtein distance on lowercase, punctuation-stripped titles.
-- **Date Matching (30%)**: Exact match or adjacent time-slot window.
-- **Venue & Locality Proximity (20%)**: Jaro-Winkler string similarity over venue and neighborhood fields.
+| Signal | Weight | Method |
+|---|---|---|
+| **Title Similarity** | 50% | Normalized Levenshtein distance on lowercase, punctuation-stripped titles |
+| **Date Matching** | 30% | Exact match or adjacent time-slot window |
+| **Venue & Locality Proximity** | 20% | Jaro-Winkler string similarity over venue and neighborhood fields |
 
 Pairs with a composite score of **0.85 or higher** are merged into a canonical record preserving all original source links in a `sources` provenance array.
 
@@ -100,40 +106,43 @@ Pairs with a composite score of **0.85 or higher** are merged into a canonical r
 > **Live deployment**: [https://open-events.vercel.app/](https://open-events.vercel.app/) — no local setup required to try the app.
 
 ### Prerequisites
+
 - Python 3.10+
 - Node.js 18+ and npm
 - A [Bright Data](https://brightdata.com) account with Scraper Studio access
 
-### 1. Environment Setup
+### 1. Clone the Repository
 
 ```bash
-# Clone the repository
 git clone https://github.com/pranavsinghpatil/open-events.git
 cd open-events
+```
 
+### 2. Backend Service
+
+```bash
 # Install Python dependencies
 pip install -r backend/requirements.txt
 
-# Start FastAPI server
+# Start the FastAPI server
 python -m uvicorn app.main:app --app-dir backend --host 0.0.0.0 --port 8000 --reload
 ```
 
 Interactive API documentation: [`http://localhost:8000/docs`](http://localhost:8000/docs)
 
-### 2. Frontend Application
+### 3. Frontend Application
 
 ```bash
-# Navigate to frontend folder
 cd frontend
 
 # Install dependencies
 npm install
 
-# Start Vite dev server
+# Start the Vite dev server
 npm run dev
 ```
 
-Open `http://localhost:5173` to access the application.
+Open `http://localhost:5173` to access the application locally, or visit the hosted version at **[open-events.vercel.app](https://open-events.vercel.app/)**.
 
 ---
 
@@ -151,13 +160,9 @@ PYTHONPATH=backend python -m unittest backend/tests/test_pipeline.py
 
 ---
 
-## Hackathon Compliance & AI Disclosure
+## Data Collection (Bright Data)
 
-- **Rule 3 & 5 (Custom Scrapers)**: Custom collectors written in Bright Data Scraper Studio for each target domain.
-- **Rule 6 (Public Pages Only)**: Targets publicly viewable event listing pages. No login, session tokens, or private user data.
-- **Rule 7 (No Government Sites)**: Sources are privately operated leisure event platforms.
-- **Rule 10 (Deliverables)**: Source code, sample data payload, architecture documentation, and setup instructions provided.
-- **Rule 11 (AI Disclosure)**: AI tooling (Google DeepMind Antigravity / Gemini, OpenAI Codex) was used during development for component scaffolding, algorithmic reference, and test generation. All system design, pipeline logic, and scraper workflows were built during the hackathon period.
+OpenEvents utilizes **Bright Data Scraper Studio** to reliably aggregate event data from public sources. Custom collectors are deployed for each target domain to ensure robust, scalable data extraction. This raw data is then fed into the pipeline for validation, normalization, and deduplication.
 
 ---
 
