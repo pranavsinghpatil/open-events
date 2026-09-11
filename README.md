@@ -76,26 +76,9 @@ React Frontend (Hero HUD, WebGL Scene, Bento Grid, Weekly Timeline)
 
 In accordance with Hackathon Rules 3 and 5, all scrapers are custom-built per target source in **Bright Data Scraper Studio** rather than using generic marketplace templates.
 
-Collector configuration is stored in [`configs/scraper_registry.json`](configs/scraper_registry.json).
-
-| Collector Name | Collector ID | Target Domain | Categories |
-|---|---|---|---|
-| `fullhyd_events_collector` | `c_fullhyd_events` | `events.fullhyderabad.com` | Music, Theatre, Dance, Workshops, Sports |
-| `hydhub_events_collector` | `c_hydhub_events` | `hydhub.in` | Concerts, Meetups, Talks, Nightlife |
-| `aroundu_events_collector` | `c_aroundu_events` | `aroundu.in/city/hyderabad` | Community, Food, Arts |
-
----
-
 ## Self-Healing & Pipeline Resilience
 
 Web scrapers break when target websites modify their DOM structure or class names. OpenEvents handles this through a four-stage validation and fallback flow:
-
-1. **Schema Validation**: Each incoming record is checked for mandatory fields (`title`, `date`, `venue`).
-2. **Drift Detection**: If field extraction drop-off exceeds threshold limits, the ingestion layer flags the run as degraded.
-3. **Fallback Resolution**: Backup parsing rules and secondary selectors are triggered automatically to recover missing attributes before writing to the database.
-4. **Telemetry Logging**: Execution stats and failure reasons are logged and surfaced via the Scraper Control Console.
-
----
 
 ## Fuzzy Deduplication & Normalization
 
@@ -198,16 +181,6 @@ cp .env.example .env
 ```
 
 Edit `.env` and supply your credentials:
-
-```env
-BRIGHT_DATA_API_KEY=your_api_key_here
-BRIGHT_DATA_ZONE=web_unlocker
-BRIGHT_DATA_FULLHYD_COLLECTOR=c_fullhyd_events
-BRIGHT_DATA_HIGHAPE_COLLECTOR=c_hydhub_events
-BRIGHT_DATA_AROUNDU_COLLECTOR=c_aroundu_events
-DB_PATH=backend/pipeline.db
-LOG_LEVEL=INFO
-```
 
 ### 2. Start the Backend
 
