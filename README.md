@@ -1,17 +1,18 @@
 # OpenEvents
 
-> City leisure events aggregation and deduplication pipeline powered by Bright Data.
+> City leisure events aggregation and deduplication pipeline powered by Bright Data — live at **[open-events.vercel.app](https://open-events.vercel.app/)**.
 
 <div align="center">
 
 [![Hackathon](https://img.shields.io/badge/WeMakeDevs-Into_the_Scrape--Verse-0052FF?style=flat-square)](https://www.wemakedevs.org/hackathons/scrape-verse)
 [![Powered by Bright Data](https://img.shields.io/badge/Powered_by-Bright_Data-FF4D00?style=flat-square)](https://brightdata.com)
-[![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688?style=flat-square)](https://fastapi.tiangolo.com)
-[![React](https://img.shields.io/badge/Frontend-React_18_+_Vite-61DAFB?style=flat-square)](https://react.dev)
-[![Three.js](https://img.shields.io/badge/WebGL-Three.js-black?style=flat-square)](https://threejs.org)
+[![FastAPI](https://img.shields.io/badge/Backend-FastAPI_0.116-009688?style=flat-square)](https://fastapi.tiangolo.com)
+[![React](https://img.shields.io/badge/Frontend-React_18_+_Vite_5-61DAFB?style=flat-square)](https://react.dev)
+[![Three.js](https://img.shields.io/badge/WebGL-Three.js_0.185-black?style=flat-square)](https://threejs.org)
+[![Motion](https://img.shields.io/badge/Animation-Motion_13-purple?style=flat-square)](https://motion.dev)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 
-**[Live Demo](http://localhost:5173)** • **[Demo Video](#demo-video)** • **[Hackathon Overview](https://www.wemakedevs.org/hackathons/scrape-verse)** • **[Bright Data Integration](docs/brightdata.md)** • **[Architecture Details](docs/architecture.md)** • **[API Contract](docs/api-contract.md)**
+**[Live Demo](https://open-events.vercel.app/)** • **[Demo Video](#demo-video)** • **[Hackathon Overview](https://www.wemakedevs.org/hackathons/scrape-verse)** • **[Bright Data Integration](docs/brightdata.md)** • **[Architecture Details](docs/architecture.md)** • **[API Contract](docs/api-contract.md)**
 
 </div>
 
@@ -19,9 +20,9 @@
 
 ## Demo Video
 
-[![OpenEvents Demo Video](https://img.youtube.com/vi/YOUR_VIDEO_ID/maxresdefault.jpg)](https://www.youtube.com/watch?v=YOUR_VIDEO_ID)
+[![OpenEvents Demo Video](https://img.youtube.com/vi/fBn6OUXb1rI/maxresdefault.jpg)](https://youtu.be/fBn6OUXb1rI)
 
-> Full video walkthrough demonstrating Bright Data custom scrapers, self-healing failovers, fuzzy deduplication, and the interactive dashboard: **[Watch on YouTube](https://www.youtube.com/watch?v=YOUR_VIDEO_ID)**.  
+> Full video walkthrough demonstrating Bright Data custom scrapers, self-healing failovers, fuzzy deduplication, and the interactive dashboard: **[Watch on YouTube](https://youtu.be/fBn6OUXb1rI)**.  
 > Step-by-step presentation script is documented in [`docs/demo.md`](docs/demo.md).
 
 ---
@@ -71,16 +72,6 @@ React Frontend (Hero-13 HUD, WebGL Scene, Bento Grid, Weekly Timeline)
 
 In accordance with Hackathon Rules 3 and 5, all scrapers are custom-built per target source in **Bright Data Scraper Studio** rather than using generic marketplace templates.
 
-### Registered Collectors (`configs/scraper_registry.json`)
-
-| Collector Name | Collector ID | Target URL | Target Categories |
-|---|---|---|---|
-| `fullhyd_events_collector` | `c_fullhyd_events` | `events.fullhyderabad.com` | Music, Theatre, Dance, Workshops, Sports |
-| `hydhub_events_collector` | `c_hydhub_events` | `hydhub.in` | Concerts, Meetups, Talks, Nightlife |
-| `aroundu_events_collector` | `c_aroundu_events` | `aroundu.in/city/hyderabad` | Community Meetups, Food, Arts |
-
----
-
 ## Self-Healing & Pipeline Resilience
 
 Web scrapers often break when target websites modify their DOM structure or class names. OpenEvents handles this with a validation and fallback flow:
@@ -104,46 +95,16 @@ Pairs with a composite score of **0.85 or higher** are merged into a canonical r
 
 ---
 
-## Unified Data Schema
-
-Sample output file: [`data/samples/hyderabad_merged_events.json`](data/samples/hyderabad_merged_events.json)
-
-```json
-{
-  "event_id": "evt_hyd_0842",
-  "title": "Hyderabad Indie Acoustic Showcase",
-  "category": "Music",
-  "date": "2026-08-28",
-  "time": "19:30",
-  "venue": "The Moonshine Project",
-  "area": "Jubilee Hills",
-  "price": "INR 499",
-  "description": "Live acoustic performances featuring indie songwriters and classical fusion sets.",
-  "image": "https://images.unsplash.com/photo-1514525253161-7a46d19cd819",
-  "sources": [
-    {
-      "site_name": "FullHyd",
-      "source_url": "https://events.fullhyderabad.com/indie-acoustic-0842"
-    },
-    {
-      "site_name": "HydHub",
-      "source_url": "https://hydhub.in/concerts/indie-acoustic-showcase"
-    }
-  ],
-  "confidence_score": 0.96,
-  "scraped_at": "2026-08-23T18:30:00Z"
-}
-```
-
----
-
 ## Quickstart
+
+> **Live deployment**: [https://open-events.vercel.app/](https://open-events.vercel.app/) — no local setup required to try the app.
 
 ### Prerequisites
 - Python 3.10+
 - Node.js 18+ and npm
+- A [Bright Data](https://brightdata.com) account with Scraper Studio access
 
-### 1. Backend Service
+### 1. Environment Setup
 
 ```bash
 # Clone the repository
@@ -157,7 +118,7 @@ pip install -r backend/requirements.txt
 python -m uvicorn app.main:app --app-dir backend --host 0.0.0.0 --port 8000 --reload
 ```
 
-Interactive API documentation will be available at `http://localhost:8000/docs`.
+Interactive API documentation: [`http://localhost:8000/docs`](http://localhost:8000/docs)
 
 ### 2. Frontend Application
 
