@@ -1,17 +1,18 @@
 # OpenEvents
 
-> City leisure events aggregation and deduplication pipeline powered by Bright Data.
+> City leisure events aggregation and deduplication pipeline powered by Bright Data — live at **[open-events.vercel.app](https://open-events.vercel.app/)**.
 
 <div align="center">
 
 [![Hackathon](https://img.shields.io/badge/WeMakeDevs-Into_the_Scrape--Verse-0052FF?style=flat-square)](https://www.wemakedevs.org/hackathons/scrape-verse)
 [![Powered by Bright Data](https://img.shields.io/badge/Powered_by-Bright_Data-FF4D00?style=flat-square)](https://brightdata.com)
-[![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688?style=flat-square)](https://fastapi.tiangolo.com)
-[![React](https://img.shields.io/badge/Frontend-React_18_+_Vite-61DAFB?style=flat-square)](https://react.dev)
-[![Three.js](https://img.shields.io/badge/WebGL-Three.js-black?style=flat-square)](https://threejs.org)
+[![FastAPI](https://img.shields.io/badge/Backend-FastAPI_0.116-009688?style=flat-square)](https://fastapi.tiangolo.com)
+[![React](https://img.shields.io/badge/Frontend-React_18_+_Vite_5-61DAFB?style=flat-square)](https://react.dev)
+[![Three.js](https://img.shields.io/badge/WebGL-Three.js_0.185-black?style=flat-square)](https://threejs.org)
+[![Motion](https://img.shields.io/badge/Animation-Motion_13-purple?style=flat-square)](https://motion.dev)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 
-**[Live Demo](http://localhost:5173)** • **[Demo Video](#demo-video)** • **[Hackathon Overview](https://www.wemakedevs.org/hackathons/scrape-verse)** • **[Bright Data Integration](docs/brightdata.md)** • **[Architecture Details](docs/architecture.md)** • **[API Contract](docs/api-contract.md)**
+**[Live Demo](https://open-events.vercel.app/)** • **[Demo Video](#demo-video)** • **[Hackathon Overview](https://www.wemakedevs.org/hackathons/scrape-verse)** • **[Bright Data Integration](docs/brightdata.md)** • **[Architecture Details](docs/architecture.md)** • **[API Contract](docs/api-contract.md)**
 
 </div>
 
@@ -19,9 +20,9 @@
 
 ## Demo Video
 
-[![OpenEvents Demo Video](https://img.youtube.com/vi/YOUR_VIDEO_ID/maxresdefault.jpg)](https://www.youtube.com/watch?v=YOUR_VIDEO_ID)
+[![OpenEvents Demo Video](https://img.youtube.com/vi/fBn6OUXb1rI/maxresdefault.jpg)](https://youtu.be/fBn6OUXb1rI)
 
-> Full video walkthrough demonstrating Bright Data custom scrapers, self-healing failovers, fuzzy deduplication, and the interactive dashboard: **[Watch on YouTube](https://www.youtube.com/watch?v=YOUR_VIDEO_ID)**.  
+> Full video walkthrough demonstrating Bright Data custom scrapers, self-healing failovers, fuzzy deduplication, and the interactive dashboard: **[Watch on YouTube](https://youtu.be/fBn6OUXb1rI)**.  
 > Step-by-step presentation script is documented in [`docs/demo.md`](docs/demo.md).
 
 ---
@@ -139,11 +140,14 @@ Sample output file: [`data/samples/hyderabad_merged_events.json`](data/samples/h
 
 ## Quickstart
 
+> **Live deployment**: [https://open-events.vercel.app/](https://open-events.vercel.app/) — no local setup required to try the app.
+
 ### Prerequisites
 - Python 3.10+
 - Node.js 18+ and npm
+- A [Bright Data](https://brightdata.com) account with Scraper Studio access
 
-### 1. Backend Service
+### 1. Environment Setup
 
 ```bash
 # Clone the repository
@@ -157,7 +161,7 @@ pip install -r backend/requirements.txt
 python -m uvicorn app.main:app --app-dir backend --host 0.0.0.0 --port 8000 --reload
 ```
 
-Interactive API documentation will be available at `http://localhost:8000/docs`.
+Interactive API documentation: [`http://localhost:8000/docs`](http://localhost:8000/docs)
 
 ### 2. Frontend Application
 
